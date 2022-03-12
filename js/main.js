@@ -3,65 +3,126 @@
 const cardArray = [
     {
         name:'pizza',
-        img: 'https://cdn.pixabay.com/photo/2012/04/01/16/51/pizza-23477_960_720.png',
+        img: 'images/pizza.png',
 
     },
     {
         name: 'fries',
-        img: 'https://cdn.pixabay.com/photo/2013/07/13/01/24/french-fries-155679_960_720.png',
+        img: 'images/fries.png',
     },
     {
         name: 'milkshake',
-        img: 'https://cdn.pixabay.com/photo/2012/04/14/15/57/drinks-34377_960_720.png',
+        img: 'images/milkshake.png',
     },
     {
         name: 'ice-cream',
-        img: 'https://cdn.pixabay.com/photo/2020/03/19/07/19/ice-cream-4946596_960_720.png',
+        img: 'images/ice-cream.png',
     },
     {
         name: 'hotdog',
-        img: 'https://cdn.pixabay.com/photo/2021/07/11/03/46/hot-dog-sandwich-6402792_960_720.png',
+        img: 'images/hotdog.png',
     },
     {
         name: 'cheeseburger',
-        img: 'https://cdn.pixabay.com/photo/2012/04/13/01/51/hamburger-31775_960_720.png',
+        img: 'images/cheeseburger.png',
     },
     {
         name:'pizza',
-        img: 'https://cdn.pixabay.com/photo/2012/04/01/16/51/pizza-23477_960_720.png',
+        img: 'images/pizza.png',
 
     },
     {
         name: 'fries',
-        img: 'https://cdn.pixabay.com/photo/2013/07/13/01/24/french-fries-155679_960_720.png',
+        img: 'images/fries.png',
     },
     {
         name: 'milkshake',
-        img: 'https://cdn.pixabay.com/photo/2012/04/14/15/57/drinks-34377_960_720.png',
+        img: 'images/milkshake.png',
     },
     {
         name: 'ice-cream',
-        img: 'https://cdn.pixabay.com/photo/2020/03/19/07/19/ice-cream-4946596_960_720.png',
+        img: 'images/ice-cream.png',
     },
     {
         name: 'hotdog',
-        img: 'https://cdn.pixabay.com/photo/2021/07/11/03/46/hot-dog-sandwich-6402792_960_720.png',
+        img: 'images/hotdog.png',
     },
     {
         name: 'cheeseburger',
-        img: 'https://cdn.pixabay.com/photo/2012/04/13/01/51/hamburger-31775_960_720.png',
+        img: 'images/cheeseburger.png',
     },
 ]
 
 cardArray.sort(() => 0.5 - Math.random());
-const gridDisplay = document.querySelector('#grid')
+
+console.log(cardArray);
+
+const gridDisplay = document.querySelector('#grid');
+const resultDisplay = document.querySelector('#result-Score')
+
+let cardChosen = [];
+let cardsChosenIds = [];
+const cardWon = [];
 
 function createBoard(){
-    for(let i = 0; i < 10; i++){
+    for(let i = 0; i < cardArray.length; i++){
       const card = document.createElement('img');
-      card.setAttribute('src', 'https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_960_720.png');
-      card.setAttribute('data-id', i)
+      card.setAttribute('src', 'images/blank.png');
+      card.setAttribute('data-id', i);
+      card.addEventListener('click', flipCard);
       gridDisplay.appendChild(card)
     }
 }
 createBoard();
+
+
+//checking for the match photos
+function checkMatch(){
+   const cards =  document.querySelectorAll('img');
+
+   const optionOneId = cardsChosenIds[0];
+   const optionTwoId = cardsChosenIds[1];
+    console.log('check for match!')
+    if (optionOneId == optionTwoId) {
+        cards[optionOneId].setAttribute('src', 'images/blank.png');
+        cards[optionTwoId].setAttribute('src', 'images/blank.png');
+        alert('You have clicked the same image!')
+    }
+    if (cardChosen[0] == cardChosen [1]) {
+        alert('you found a match!');
+        cards[optionOneId].setAttribute('src', 'images/white.png');
+        cards[optionTwoId].setAttribute('src', 'images/white.png');
+        cards[optionOneId].removeEventListener('click', flipCard);
+        cards[optionTwoId].removeEventListener('click', flipCard);
+        cardWon.push(cardChosen);
+    }
+    else {
+        cards[optionOneId].setAttribute('src', 'images/blank.png');
+        cards[optionTwoId].setAttribute('src', 'images/blank.png');
+        alert('Sorry try again!')
+    }
+    resultDisplay.textContent = cardWon.length;
+
+    cardChosen = []
+    cardsChosenIds  = []
+
+    if(cardWon.length === (cardArray.length/2)){
+        resultDisplay.textContent = 'Congratulations you found them all!'
+    }
+}
+
+
+//function to flip the cards
+function flipCard (){
+
+    let cardId = this.getAttribute('data-id');
+    cardChosen.push(cardArray[cardId].name)
+    cardsChosenIds.push(cardId);
+    console.log(cardChosen);
+    console.log(cardsChosenIds)
+    this.setAttribute('src', cardArray[cardId].img);
+
+    if(cardChosen.length === 2) {
+        setTimeout(checkMatch, 500)
+    }
+}
