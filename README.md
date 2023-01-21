@@ -1,2 +1,2 @@
 # memoryGame
-JavaScript Memory game for beginners
+JavaScript Memory game for childerns to improve their memory. :)
